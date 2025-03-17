@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กรอกข้อมูลโครงการ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select {
+            padding: 8px;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>กรอกข้อมูลโครงการ</h1>
+<form id="projectForm">
+    <label for="projectNumber">เลขโครงการ:</label>
+    <select id="projectNumber" name="projectNumber" required>
+        <option value="" disabled selected>โปรดเลือก</option>
+    </select>
+
+    <label for="agent">Agent:</label>
+    <select id="agent" name="agent" required>
+        <option value="" disabled selected>โปรดเลือก</option>
+    </select>
+
+    <label for="reportType">ประเภทของรายงาน:</label>
+    <select id="reportType" name="reportType" required>
+        <option value="" disabled selected>โปรดเลือก</option>
+        <option value="CM">CM</option>
+        <option value="PM">PM</option>
+    </select>
+
+    <button type="submit">ส่งข้อมูล</button>
+</form>
+
+<script>
+    async function fetchData(sheetUrl, selectId, fieldName) {
+        const response = await fetch(sheetUrl);
+        const data = await response.json();
+        const selectElement = document.getElementById(selectId);
+
+        data.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item[fieldName]; // ใช้ชื่อฟิลด์ที่ถูกต้องจาก Google Sheets
+            option.text = item[fieldName]; // หรือใช้ข้อมูลที่คุณต้องการแสดง
+            selectElement.add(option);
+        });
+    }
+
+    async function submitData(formData) {
+        const sheetId = 'YOUR_SHEET_ID'; // ใส่ ID ของ Google Sheets ที่จะส่งข้อมูลไป
+        const apiKey = 'YOUR_API_KEY'; // ใส่ API Key ที่ได้จาก Google Cloud
+
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:append?valueInputOption=RAW&key=${apiKey}`;
+
+        const body = {
+            values: [formData]
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (response.ok) {
+            alert('ข้อมูลถูกส่งไปยัง Google Sheets เรียบร้อยแล้ว!');
+        } else {
+            alert('เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Google Sheets');
+        }
+    }
+
+    document.getElementById('projectForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const projectNumber = document.getElementById('projectNumber').value;
+        const agent = document.getElementById('agent').value;
+        const reportType = document.getElementById('reportType').value;
+
+        const formData = [projectNumber, agent, reportType];
+        submitData(formData); // ส่งข้อมูลไปยัง Google Sheets
+    });
+
+    // ดึงข้อมูล project codes และ agents เมื่อโหลดหน้า
+    window.onload = function() {
+        fetchData('YOUR_GOOGLE_SHEET_JSON_URL_FOR_PROJECT_CODES', 'projectNumber', 'project_code'); // แทนที่ด้วย URL ของ Google Sheets สำหรับเลขโครงการ
+        fetchData('YOUR_GOOGLE_SHEET_JSON_URL_FOR_AGENTS', 'agent', 'agent_name'); // แทนที่ด้วย URL ของ Google Sheets สำหรับ Agents
+    };
+</script>
+
+</body>
+</html>
