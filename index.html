@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>กรอกข้อมูลการส่งโครงการ</title>
+    <title>กรอกข้อมูลโครงการ</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,16 +40,45 @@
         <option value="" disabled selected>โปรดเลือก</option>
     </select>
 
-    <label for="agent">Agent:</label>
-    <select id="agent" name="agent" required>
-        <option value="" disabled selected>โปรดเลือก</option>
-    </select>
-
     <label for="reportType">ประเภทของรายงาน:</label>
     <select id="reportType" name="reportType" required>
         <option value="" disabled selected>โปรดเลือก</option>
         <option value="CM">CM</option>
         <option value="PM">PM</option>
+    </select>
+
+    <label for="workStage">งวดงาน:</label>
+    <select id="workStage" name="workStage" required>
+        <option value="" disabled selected>โปรดเลือก</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+    </select>
+
+    <label for="agent">Agent:</label>
+    <select id="agent" name="agent" required>
+        <option value="" disabled selected>โปรดเลือก</option>
     </select>
 
     <button type="submit">ส่งข้อมูล</button>
@@ -98,10 +127,11 @@
         event.preventDefault();
         
         const projectNumber = document.getElementById('projectNumber').value;
-        const agent = document.getElementById('agent').value;
         const reportType = document.getElementById('reportType').value;
+        const workStage = document.getElementById('workStage').value;
+        const agent = document.getElementById('agent').value;
 
-        const formData = [projectNumber, agent, reportType];
+        const formData = [projectNumber, reportType, workStage, agent];
         submitData(formData); // ส่งข้อมูลไปยัง Google Sheets
     });
 
