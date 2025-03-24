@@ -79,21 +79,28 @@
     <button type="submit">ส่งข้อมูล</button>
 </form>
 <script>
-    async function fetchData(sheetUrl, selectId, fieldName) {
+    const sheetId = '1pjEeyxJUjX-A6iy5-sp7CTdib5QNqhm8tOxAHw0gg2A'; // ใส่ ID ของ Google Sheets
+    const apiKey = 'AIzaSyCetpYVvo_Nnd80KE0RE52E4La8LM2MtJo'; // API Key
+
+    async function fetchData(sheetUrl, selectId) {
         const response = await fetch(sheetUrl);
         const data = await response.json();
         const selectElement = document.getElementById(selectId);
-        data.values.forEach(item => {
-            const option = document.createElement('option');
-            option.value = item[0]; // Assuming the first column contains the value
-            option.text = item[0]; // Display the first column value
-            selectElement.add(option);
-        });
+        
+        // ตรวจสอบว่าข้อมูลมีค่าอยู่ใน JSON หรือไม่
+        if (data.values) {
+            data.values.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item[0]; // Assuming the first column contains the value
+                option.text = item[0]; // Display the first column value
+                selectElement.add(option);
+            });
+        } else {
+            console.error("No values found in the fetched data.");
+        }
     }
 
     async function submitData(formData) {
-        const sheetId = '1pjEeyxJUjX-A6iy5-sp7CTdib5QNqhm8tOxAHw0gg2A'; // ID ของ Google Sheets 
-        const apiKey = 'AIzaSyCetpYVvo_Nnd80KE0RE52E4La8LM2MtJo'; // API Key
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/PylarInput!A1:append?valueInputOption=RAW&key=${apiKey}`;
         const body = {
             values: [formData]
@@ -124,8 +131,8 @@
 
     // ดึงข้อมูล project codes และ agents เมื่อโหลดหน้า
     window.onload = function() {
-        fetchData(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!D30:D55?key=${apiKey}`, 'projectNumber', 'project_code'); // URL ของ Google Sheets สำหรับเลขโครงการ
-        fetchData(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!W30:W55?key=${apiKey}`, 'agent', 'agent_name'); // URL ของ Google Sheets สำหรับ Agents
+        fetchData(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!D30:D55?key=${apiKey}`, 'projectNumber'); // URL ของ Google Sheets สำหรับเลขโครงการ
+        fetchData(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/DASHBOARD!W30:W55?key=${apiKey}`, 'agent'); // URL ของ Google Sheets สำหรับ Agents
     };
 </script>
 </body>
