@@ -76,7 +76,7 @@
         <option value="24">24</option>
     </select>
 
-    <label for="agent">Agent:</label>
+    <label for="agent">เจ้าหน้าที่:</label>
     <select id="agent" name="agent" required>
         <option value="" disabled selected>โปรดเลือก</option>
     </select>
@@ -99,8 +99,8 @@
     }
 
     async function submitData(formData) {
-        const sheetId = 'YOUR_SHEET_ID'; // ใส่ ID ของ Google Sheets ที่จะส่งข้อมูลไป
-        const apiKey = 'YOUR_API_KEY'; // ใส่ API Key ที่ได้จาก Google Cloud
+        const sheetId = '1pjEeyxJUjX-A6iy5-sp7CTdib5QNqhm8tOxAHw0gg2A'; // ใส่ ID ของ Google Sheets ที่จะส่งข้อมูลไป
+        const apiKey = 'AIzaSyCetpYVvo_Nnd80KE0RE52E4La8LM2MtJo'; // ใส่ API Key ที่ได้จาก Google Cloud
 
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:append?valueInputOption=RAW&key=${apiKey}`;
 
@@ -137,8 +137,8 @@
 
     // ดึงข้อมูล project codes และ agents เมื่อโหลดหน้า
     window.onload = function() {
-        fetchData('YOUR_GOOGLE_SHEET_JSON_URL_FOR_PROJECT_CODES', 'projectNumber', 'project_code'); // แทนที่ด้วย URL ของ Google Sheets สำหรับเลขโครงการ
-        fetchData('YOUR_GOOGLE_SHEET_JSON_URL_FOR_AGENTS', 'agent', 'agent_name'); // แทนที่ด้วย URL ของ Google Sheets สำหรับ Agents
+        fetchData('https://sheets.googleapis.com/v4/spreadsheets/<1pjEeyxJUjX-A6iy5-sp7CTdib5QNqhm8tOxAHw0gg2A>/values/<DASHBOARD!D30:D55>?key=<AIzaSyCetpYVvo_Nnd80KE0RE52E4La8LM2MtJo>', 'projectNumber', 'project_code'); // แทนที่ด้วย URL ของ Google Sheets สำหรับเลขโครงการ
+        fetchData('https://sheets.googleapis.com/v4/spreadsheets/<1pjEeyxJUjX-A6iy5-sp7CTdib5QNqhm8tOxAHw0gg2A>/values/<DASHBOARD!W30:W55>?key=<AIzaSyCetpYVvo_Nnd80KE0RE52E4La8LM2MtJo>'', 'agent', 'agent_name'); // แทนที่ด้วย URL ของ Google Sheets สำหรับ Agents
     };
 </script>
 
