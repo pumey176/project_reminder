@@ -79,7 +79,7 @@
     <button type="submit">ส่งข้อมูล</button>
 </form>
 <script>
-    const sheetId = '1pjEeyxJUjX-A6iy5-sp7CTdib5QNqhm8tOxAHw0gg2A'; // ใส่ ID ของ Google Sheets
+    const sheetId = '1pjEeyxJUjX-A6iy5-sp7CTdib5QNqhm8tOxAHw0gg2A'; // ID ของ Google Sheets
     const apiKey = 'AIzaSyCetpYVvo_Nnd80KE0RE52E4La8LM2MtJo'; // API Key
 
     async function fetchData(sheetUrl, selectId) {
@@ -87,17 +87,26 @@
         const data = await response.json();
         const selectElement = document.getElementById(selectId);
         
+        // ใช้ Set เพื่อเก็บค่าที่ไม่ซ้ำกัน
+        const uniqueValues = new Set();
+
         // ตรวจสอบว่าข้อมูลมีค่าอยู่ใน JSON หรือไม่
         if (data.values) {
             data.values.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item[0]; // Assuming the first column contains the value
-                option.text = item[0]; // Display the first column value
-                selectElement.add(option);
+                // เพิ่มค่าที่ไม่ซ้ำกันลงใน Set
+                uniqueValues.add(item[0]); // Assuming the first column contains the value
             });
         } else {
             console.error("No values found in the fetched data.");
         }
+
+        // เพิ่มค่าที่ไม่ซ้ำไปยัง dropdown
+        uniqueValues.forEach(value => {
+            const option = document.createElement('option');
+            option.value = value;
+            option.text = value; // Display the unique value
+            selectElement.add(option);
+        });
     }
 
     async function submitData(formData) {
@@ -105,6 +114,7 @@
         const body = {
             values: [formData]
         };
+
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -112,10 +122,14 @@
             },
             body: JSON.stringify(body)
         });
+
+        const result = await response.json(); // รับค่า JSON จาก response
+
         if (response.ok) {
             alert('ข้อมูลถูกส่งไปยัง Google Sheets เรียบร้อยแล้ว!');
         } else {
-            alert('เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Google Sheets');
+            console.error('Error:', result); // แสดงผลข้อมูลผิดพลาดใน console
+            alert(`เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Google Sheets: ${result.error.message}`);
         }
     }
 
